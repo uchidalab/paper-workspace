@@ -31,11 +31,12 @@ fi
 
 echo ">> ${dest} に template をコピー..."
 mkdir -p "${dest}"
-# 隠しファイル（.gitignore / .claude / .codex）も含めてコピー
+# 隠しファイル（.gitignore など）も含めてコピー。
+# エージェント基盤（skills / 自動ビルド hook）は paper-workspace ルートに集約しているため、
+# 論文ディレクトリには複製しない（Overleaf へ同期されるため無汚染に保つ）。
 cp -R "${template_dir}/." "${dest}/"
 
 chmod +x "${dest}/scripts/build-latex.sh" "${dest}/scripts/sync-overleaf.sh" 2>/dev/null || true
-chmod +x "${dest}/.codex/hooks/"*.sh 2>/dev/null || true
 
 echo ">> git リポジトリを初期化..."
 git -C "${dest}" init -q
@@ -58,4 +59,5 @@ cat <<NEXT
        cd papers/${name} && ./scripts/build-latex.sh
 
 注: papers/ はワークスペースの .gitignore で追跡対象外です。各論文は独立した（非公開）リポジトリとして管理されます。
+注: 執筆支援スキルと保存時の自動ビルドは、paper-workspace ルートから Claude / Codex を起動したときに有効です（変更された論文だけがビルドされます）。
 NEXT

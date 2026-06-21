@@ -4,25 +4,32 @@
 
 / docs / にビルドと同期の詳しい手順、/ skills / に執筆支援スキル、/ template / に1論文ぶんの自己完結スケルトンが入っている。
 
+**エージェントは常に paper-workspace ルートから起動する**（`papers/<name>/` はサブディレクトリとして編集する）。skills と保存時の自動ビルド hook はワークスペースルートに集約してあり、`papers/<name>/` 側には何も置かない（Overleaf へ同期されるため無汚染に保つ）。
+
 ## ディレクトリ構成
 
 ```
-paper-workspace/
+paper-workspace/                  ← ここから Claude / Codex を起動する
 ├── scripts/
-│   └── new-paper.sh          template から papers/<name>/ に新規論文を作成
-├── template/                 1論文ぶんの自己完結スケルトン
-│   ├── main.tex              タイトル・著者はプレースホルダ
-│   ├── stylefile.sty         既定フォーマット（2カラム jsarticle）
-│   ├── latexmkrc             platex / pbibtex / dvipdfmx
-│   ├── scripts/              build-latex.sh, sync-overleaf.sh
-│   ├── .claude/ .codex/      保存時に自動ビルドする hook
-│   ├── section/              章の雛形（abstract/intro/related/method/experiment/summ）
-│   ├── figs/                 図の置き場
-│   ├── bibsample.bib         参考文献データベースの雛形
-│   └── CLAUDE.md             リポジトリルールの雛形
-├── skills/                   論文執筆支援スキル（このリポジトリで管理）
-├── docs/                     ビルド・同期・新規作成の手順
-└── papers/                   各論文（非公開リポ）を置く場所（.gitignore 済み）
+│   ├── new-paper.sh              template から papers/<name>/ に新規論文を作成
+│   ├── link-skills.sh            skills/ から .claude/skills・.agents/skills へ symlink を生成
+│   └── build-changed-papers.sh   Stop フックが呼ぶ：変更された論文だけビルド
+├── skills/                       論文執筆支援スキル（正本・このリポジトリで管理）
+├── .claude/                      settings.json（Stop フック）+ skills/（skills/ への symlink）
+├── .agents/skills/               Codex 用 skills/ への symlink
+├── .codex/hooks.json             Codex 用 Stop フック
+├── CLAUDE.md / AGENTS.md         ワークスペース運用ルール（Claude / Codex 共通内容）
+├── template/                     1論文ぶんの自己完結スケルトン（LaTeX のみ）
+│   ├── main.tex                  タイトル・著者はプレースホルダ
+│   ├── stylefile.sty             既定フォーマット（2カラム jsarticle）
+│   ├── latexmkrc                 platex / pbibtex / dvipdfmx
+│   ├── scripts/                  build-latex.sh, sync-overleaf.sh
+│   ├── section/                  章の雛形（abstract/intro/related/method/experiment/summ）
+│   ├── figs/                     図の置き場
+│   ├── bibsample.bib             参考文献データベースの雛形
+│   └── CLAUDE.md / AGENTS.md     リポジトリルールの雛形
+├── docs/                         ビルド・同期・新規作成の手順
+└── papers/                       各論文（非公開リポ）を置く場所（.gitignore 済み）
 ```
 
 ## 必要なもの
@@ -69,11 +76,19 @@ git remote add overleaf https://git@git.overleaf.com/<PROJECT_ID>
 
 ## スキル
 
-`skills/` に論文執筆を支援する [Agent Skills](https://github.com/anthropics/skills) を同梱している。各スキルは次のコマンドでグローバル登録できる。
+`skills/` に論文執筆を支援する [Agent Skills](https://github.com/anthropics/skills) を正本として置いている。`.claude/skills/`（Claude Code 用）と `.agents/skills/`（Codex 用）は `skills/<name>` への symlink で、**paper-workspace ルートから起動すれば両エージェントがそのまま参照できる**（global 登録は不要）。
+
+スキルを追加・改名したら symlink を張り直す。
 
 ```bash
-npx --yes skills add ./skills/<skill-name> --global --yes
+bash scripts/link-skills.sh
 ```
+
+> workspace 外（別マシンや、各論文リポに `cd` して単独で開く場合）でも使いたいときは、任意でグローバル登録できる。
+>
+> ```bash
+> npx --yes skills add ./skills/<skill-name> --global --yes
+> ```
 
 | スキル | 役割 |
 |---|---|

@@ -25,17 +25,8 @@
 # Overleaf アップロード用などの配布 zip
 /*.zip
 
-# Claude Code のローカル設定（.claude/skills の symlink。
-# Overleaf はシンボリックリンクを扱えないため追跡しない）
-/.claude/skills/
-
-# Codex hook runtime state
-/.codex/.tex-edited-since-stop
-/.codex/.latex-build.lock/
-
 # ローカル作業用一時ディレクトリ
 /tmp/
 
 # OS / エディタ
 .DS_Store
-.claude/.latex-hash

@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/build-changed-papers.sh",
+            "statusMessage": "変更された論文を LaTeX ビルド中…"
+          }
+        ]
+      }
+    ]
+  }
+}

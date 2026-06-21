@@ -3,9 +3,11 @@
 /papers/*
 !/papers/.gitkeep
 
-# Claude Code のローカル設定（skills の symlink 等）
-/.claude/skills/
-.claude/.latex-hash
+# 自動ビルドの状態（paper ごとのハッシュ・ロック）
+/.cache/
+
+# Claude Code のローカル設定（個人設定。skills の symlink と settings.json は追跡する）
+/.claude/settings.local.json
 
 # OS / エディタ
 .DS_Store
