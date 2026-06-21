@@ -78,6 +78,7 @@ npx --yes skills add ./skills/<skill-name> --global --yes
 | スキル | 役割 |
 |---|---|
 | `latex-build` | Docker / latexmk ベースの LaTeX ビルド環境のセットアップとデバッグ |
+| `overleaf-sync` | GitHub↔Overleaf の双方向同期（remote 設定・`sync-overleaf.sh` の運用） |
 | `latex-typesetting` | 2カラム論文の図表配置・体裁規則 |
 | `research-paper-writing` | ML/CV/NLP 系論文の構成・段落・推敲 |
 | `paragraph-writing` | パラグラフ・ライティングと学術文章の作法 |
