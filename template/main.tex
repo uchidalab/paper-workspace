@@ -1,0 +1,57 @@
+\documentclass[a4j,10pt,a4paper]{jsarticle}\usepackage{stylefile}
+%
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{amsmath}
+\graphicspath{{./figs/}}
+\usepackage{subfig}
+\usepackage{enumerate}
+\usepackage{cite}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage[dvipdfmx]{xcolor}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+% 図・式まわりの余白調整
+\setlength\floatsep{0pt}
+\setlength\textfloatsep{0pt}
+\setlength\intextsep{0pt}
+\setlength\abovecaptionskip{0pt}
+% 数式まわり
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+
+% セクション見出しまわり
+\usepackage{titlesec}
+\titlespacing{\section}{0pt}{4pt}{2pt}
+\titlespacing{\subsection}{0pt}{3pt}{1pt}
+
+\def\vector#1{\mbox{\boldmath $#1$}}
+\newcommand{\argmax}{\mathop{\rm arg~max}\limits}
+\newcommand{\argmin}{\mathop{\rm arg~min}\limits}
+\newcommand{\bhline}[1]{\noalign{\hrule height #1}}
+\newcommand{\settinglabel}[1]{\noindent\textbf{#1}　}
+
+\begin{document}
+%タイトル 2カラムぶち抜き
+\twocolumn[
+	\centerline{\LARGE 論文タイトルをここに記入}\par\vspace{2mm}
+	\centerline{\large 所属（大学・研究科）}\par
+	\centerline{\large 専攻・研究室}\par
+	\centerline{\large 著者名}\par\vspace{2mm}
+\input{./section/abstract.tex}
+]
+%
+
+\input{./section/intro.tex}
+\input{./section/related_work.tex}
+\input{./section/method.tex}
+\input{./section/experiment.tex}
+\input{./section/summ.tex}
+
+% 参考文献
+\bibliographystyle{ieeetr}
+\bibliography{bibsample}
+
+\end{document}

@@ -1,0 +1,41 @@
+# === LaTeX ビルド成果物（platex + latexmk）===
+*.aux
+*.bbl
+*.blg
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.dvi
+*.xdv
+*.idx
+*.ind
+*.ilg
+*.nav
+*.snm
+*.vrb
+
+# ビルド出力 PDF（ルート直下の成果物のみ無視。figs/ や docs/ の PDF は追跡する）
+/*.pdf
+
+# Overleaf アップロード用などの配布 zip
+/*.zip
+
+# Claude Code のローカル設定（.claude/skills の symlink。
+# Overleaf はシンボリックリンクを扱えないため追跡しない）
+/.claude/skills/
+
+# Codex hook runtime state
+/.codex/.tex-edited-since-stop
+/.codex/.latex-build.lock/
+
+# ローカル作業用一時ディレクトリ
+/tmp/
+
+# OS / エディタ
+.DS_Store
+.claude/.latex-hash

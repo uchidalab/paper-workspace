@@ -1,0 +1,11 @@
+# 各論文は papers/ 配下の独立した（非公開）リポジトリとして管理する。
+# 公開ワークスペースには論文の中身を含めない。
+/papers/*
+!/papers/.gitkeep
+
+# Claude Code のローカル設定（skills の symlink 等）
+/.claude/skills/
+.claude/.latex-hash
+
+# OS / エディタ
+.DS_Store
