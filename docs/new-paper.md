@@ -8,7 +8,7 @@
 ./scripts/new-paper.sh my-paper
 ```
 
-これで `papers/my-paper/` に `template/` の内容（`main.tex`、`stylefile.sty`、`latexmkrc`、`scripts/`、`.claude/`、`.codex/`、`section/` 雛形 など）がコピーされ、git リポジトリとして初期化される。
+これで `papers/my-paper/` に `template/` の内容（`main.tex`、`stylefile.sty`、`latexmkrc`、`scripts/`、`.claude/`、`.agents/`、`.codex/`、`section/` 雛形など）がコピーされ、git リポジトリとして初期化される。エージェント設定とスキル実体は論文リポジトリに Git 管理され、Overleaf にも同期される。
 
 その後の手順:
 
@@ -30,6 +30,9 @@ Overleaf と同期する場合は `docs/overleaf-sync.md` を参照して `overl
 mkdir -p papers/my-paper && cd papers/my-paper
 # （学会テンプレートの .tex / .sty / .cls 一式をここに展開）
 cp -R ../../template/scripts ./scripts
+cp -R ../../template/.claude ./.claude
+cp -R ../../template/.agents ./.agents
+cp -R ../../template/.codex ./.codex
 cp ../../template/latexmkrc ./latexmkrc
 cp ../../template/.gitignore ./.gitignore
 git init && git add -A && git commit -m "init from conference template"
@@ -45,4 +48,10 @@ LATEX_MAIN=paper.tex ./scripts/build-latex.sh
 
 ## 3. 執筆支援スキル
 
-`skills/` の各スキルを `npx skills add` で登録すると、文章作法・日本語校正・体裁・ビルドの支援が使える。詳細はワークスペース直下の `README.md` を参照。
+`.claude/skills/` と `.agents/skills/` に同じスキル実体が含まれるため、論文リポジトリを単独でクローンしてもグローバル登録なしで利用できる。スキルの正本を変更した場合は、paper-workspace で `bash scripts/sync-paper-skills.sh` を実行する。
+
+## 4. 自動ビルドフック
+
+- paper-workspace ルートから Claude / Codex を起動した場合は、workspace 側のフックが `papers/*/` の変更を検知する。
+- `papers/my-paper/` から単独起動した場合は、論文側の `.claude/settings.json` / `.codex/hooks.json` が `scripts/build-latex-if-changed.sh` を呼ぶ。
+- 初回またはソース変更後の Stop でだけビルドし、成功時のハッシュとロックは Git 管理外の `.cache/` に保存する。

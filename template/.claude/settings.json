@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" || exit 0; bash ./scripts/build-latex-if-changed.sh",
+            "timeout": 600,
+            "statusMessage": "変更された LaTeX 論文をビルド中…"
+          }
+        ]
+      }
+    ]
+  }
+}

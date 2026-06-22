@@ -28,5 +28,8 @@
 # ローカル作業用一時ディレクトリ
 /tmp/
 
+# Claude Code / Codex の自動ビルド状態
+/.cache/
+
 # OS / エディタ
 .DS_Store

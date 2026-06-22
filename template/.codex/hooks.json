@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/build-latex-if-changed.sh",
+            "statusMessage": "変更された LaTeX 論文をビルド中…"
+          }
+        ]
+      }
+    ]
+  }
+}

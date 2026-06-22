@@ -5,7 +5,8 @@
 #   ./scripts/new-paper.sh <paper-name>
 #
 # 学会指定のテンプレートを使う場合は、このスクリプトの代わりに、その学会の
-# .tex 一式を papers/<name>/ に置き、template/scripts/ と template/latexmkrc を
+# .tex 一式を papers/<name>/ に置き、template/scripts/、template/.claude/、
+# template/.agents/、template/.codex/、template/latexmkrc を
 # コピーすればローカルビルド・Overleaf 同期の仕組みだけ流用できる。
 set -euo pipefail
 
@@ -32,11 +33,13 @@ fi
 echo ">> ${dest} に template をコピー..."
 mkdir -p "${dest}"
 # 隠しファイル（.gitignore など）も含めてコピー。
-# エージェント基盤（skills / 自動ビルド hook）は paper-workspace ルートに集約しているため、
-# 論文ディレクトリには複製しない（Overleaf へ同期されるため無汚染に保つ）。
+# 論文単独起動用の .claude / .agents / .codex、スキル実体、自動ビルド hook も含む。
 cp -R "${template_dir}/." "${dest}/"
 
-chmod +x "${dest}/scripts/build-latex.sh" "${dest}/scripts/sync-overleaf.sh" 2>/dev/null || true
+chmod +x \
+  "${dest}/scripts/build-latex.sh" \
+  "${dest}/scripts/build-latex-if-changed.sh" \
+  "${dest}/scripts/sync-overleaf.sh" 2>/dev/null || true
 
 echo ">> git リポジトリを初期化..."
 git -C "${dest}" init -q
@@ -59,5 +62,5 @@ cat <<NEXT
        cd papers/${name} && ./scripts/build-latex.sh
 
 注: papers/ はワークスペースの .gitignore で追跡対象外です。各論文は独立した（非公開）リポジトリとして管理されます。
-注: 執筆支援スキルと保存時の自動ビルドは、paper-workspace ルートから Claude / Codex を起動したときに有効です（変更された論文だけがビルドされます）。
+注: paper-workspace ルート起動時は workspace の一括フック、論文リポジトリ単独起動時は同梱の .claude / .codex フックが自動ビルドを行います。
 NEXT

@@ -8,7 +8,9 @@
 - `.tex` や `.bib` などを編集した後、必要に応じて `./scripts/build-latex.sh` で PDF の生成を確認する。
 - ビルドする主ファイルが `main.tex` でない場合は `LATEX_MAIN` で指定する（例: `LATEX_MAIN=paper.tex ./scripts/build-latex.sh`）。主ファイル名は `.latexmain` に書いておくと、ワークスペースの自動ビルドもそれを使う。
 - Overleaf と厳密な差分確認が必要な場合は、Overleaf 側の TeX Live バージョンとビルドログも確認する。
-- 自動ビルド（保存時）は各論文ではなく **paper-workspace ルート**の Stop フックが担う。エージェントは paper-workspace ルートから起動し、変更された論文だけがビルドされる。この論文ディレクトリには `.claude` / `.codex` などエージェント基盤を置かない（Overleaf へ同期されるため）。
+- paper-workspace ルートから起動した場合は、workspace 側の Stop フックが変更された論文をビルドする。
+- この論文リポジトリから単独起動した場合は、`.claude/settings.json` / `.codex/hooks.json` の Stop フックが `./scripts/build-latex-if-changed.sh` を呼び、この論文に変更がある場合だけビルドする。
+- `.claude` / `.agents` / `.codex` はスキル実体を含めて Git 管理し、Overleaf にも同期する。シンボリックリンクは使用せず、フックの実行状態は `.cache/` に置いて Git 管理しない。
 
 ## Git 操作
 
@@ -23,4 +25,4 @@
 
 ## 執筆支援スキル
 
-論文執筆スキルはワークスペース（`paper-workspace`）の `skills/` が正本。**paper-workspace ルートから Claude / Codex を起動すれば**、`.claude/skills` / `.agents/skills`（`skills/` への symlink）経由でそのまま使える。文章作法は `research-paper-writing` / `paragraph-writing`、日本語表記校正は `japanese-paper-proofreading`、体裁は `latex-typesetting`、ビルドは `latex-build`、Overleaf 同期は `overleaf-sync`。
+Claude Code は `.claude/skills/`、Codex は `.agents/skills/` に複製されたスキル実体を読む。この論文リポジトリだけをクローン・起動した場合も、グローバル登録なしで利用できる。文章作法は `research-paper-writing` / `paragraph-writing`、日本語表記校正は `japanese-paper-proofreading`、体裁は `latex-typesetting`、ビルドは `latex-build`、Overleaf 同期は `overleaf-sync`。

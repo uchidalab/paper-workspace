@@ -1,10 +1,10 @@
 # paper-workspace ルール
 
-論文執筆の共通基盤。**常にこの paper-workspace ルートで起動**し、各論文は `papers/<name>/`（独立した非公開リポ）をサブディレクトリとして編集する。
+論文執筆の共通基盤。複数論文を扱う場合は paper-workspace ルートで起動し、各論文は `papers/<name>/`（独立した非公開リポ）をサブディレクトリとして編集する。論文リポジトリを単独で起動する運用も可能。
 
 ## 執筆支援スキル
 
-`skills/` が正本。`.claude/skills/` と `.agents/skills/` はそこへの symlink で、Claude Code は `.claude/skills/`、Codex は `.agents/skills/` から同じ実体を読む。
+スキルの正本は `template/.agents/skills/`。`template/.claude/skills/` と各 `papers/<name>/{.agents,.claude}/skills/` には通常ファイルとして複製する。
 
 - 文章作法: `research-paper-writing` / `paragraph-writing`
 - 日本語表記校正: `japanese-paper-proofreading`
@@ -12,17 +12,17 @@
 - ビルド環境: `latex-build`
 - Overleaf 同期: `overleaf-sync`
 
-スキルを追加・改名したら `bash scripts/link-skills.sh` を再実行して両ディレクトリを揃える。
+スキルを追加・改名したら `bash scripts/sync-paper-skills.sh` を実行してテンプレートと既存論文を揃える。workspaceルートの `.claude` / `.codex` はフックのみを保持し、スキルは置かない。
 
 ## LaTeX 自動ビルド
 
-ターン終了（Stop）時に `scripts/build-changed-papers.sh` が走り、`papers/*/` のうち `.tex`/`.bib` に変更があった論文だけを Docker でビルドする。状態（ハッシュ・ロック）は `.cache/` に置き、`papers/<name>/` には書かない（Overleaf 無汚染）。
+workspace ルート起動時は、ターン終了（Stop）に `scripts/build-changed-papers.sh` が走り、`papers/*/` のうちソースに変更があった論文だけを Docker でビルドする。状態（ハッシュ・ロック）は workspace の `.cache/` に置く。
 
-手動ビルドは各論文で `./scripts/build-latex.sh`（`clean` / `version` も可）。
+論文リポジトリ単独起動時は、そのリポジトリの `.claude` / `.codex` フックが `./scripts/build-latex-if-changed.sh` を呼ぶ。手動ビルドは各論文で `./scripts/build-latex.sh`（`clean` / `version` も可）。
 
-## 重要: papers/ を汚さない
+## papers/ 内のエージェント設定
 
-`papers/<name>/` は Overleaf へ同期される。`.claude` / `.agents` / `.codex` や symlink、ビルド状態ファイルを `papers/<name>/` に置かない。エージェント基盤はすべて workspace ルートに集約する。
+各論文リポジトリは `.claude` / `.agents` / `.codex` を通常ファイルとして Git 管理し、Overleaf にも同期してよい。シンボリックリンクは置かず、実行状態は Git 管理外の `.cache/` に保存する。
 
 ## Git 操作
 

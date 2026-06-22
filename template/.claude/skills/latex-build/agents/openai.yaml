@@ -1,0 +1,4 @@
+interface:
+  display_name: "LaTeX Build"
+  short_description: "Docker and Overleaf LaTeX build workflow"
+  default_prompt: "Use $latex-build to set up or debug a Docker/Overleaf-compatible LaTeX build."
